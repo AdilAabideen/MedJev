@@ -1,0 +1,24 @@
+schema_version: 1
+source:
+  id: curb65
+  provider: seeded_rule_generator
+  revision: generator-v1
+  rules_reference: https://pubmed.ncbi.nlm.nih.gov/12728155/
+  license: derived-rule-examples
+  note: CURB-65 criteria are applied to generated adult cases; score is not a probability or a treatment recommendation.
+conversion:
+  decision_type: score
+  scale_id: curb65
+  score_direction: higher_is_worse
+  ordered_values: [0, 1, 2, 3, 4, 5]
+  decision_question: "What is the CURB-65 score from the stated findings?"
+training_allocation:
+  seed: 42
+  counts:
+    train: 666
+    validation: 333
+    test: 333
+output:
+  directory: datasets/curb65/v1/processed
+  records_format: parquet
+  manifest_file: manifest.json

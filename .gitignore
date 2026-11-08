@@ -1,1 +1,17 @@
 /agentContext
+
+# Generated/downloaded research data: never commit source payloads or derived records.
+/datasets/**/raw/
+/datasets/**/cache/
+/datasets/**/processed/
+/datasets/**/manifest.json
+/datasets/**/*.parquet
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+/genAnalysis
+/datasets/mimic_esi/v1/static/
+
+/venv

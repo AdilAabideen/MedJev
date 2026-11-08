@@ -1,0 +1,33 @@
+schema_version: 1
+source:
+  id: mimic_esi
+  provider: local_mimic_iv_ed
+  revision: local-user-supplied
+  documentation: https://mimic.mit.edu/docs/iv/modules/ed/triage.html
+  license: physionet-restricted
+  access_requirements: PhysioNet credentialing, CITI training, and signed data-use agreement
+  local_path_env: MIMIC_IV_ED_TRIAGE_CSV
+  note: The supplied MimicDataset.csv omits subject_id. This build uses unique stay_id values for training records and does not create patient-disjoint evaluation splits.
+source_fields:
+  allowed_input: [chiefcomplaint, heartrate, resprate, o2sat, sbp, dbp, pain]
+  label: acuity
+  group: stay_id
+  visit_id: stay_id
+  excluded_from_input: [acuity, stay_id, temperature, gender, race, arrival_transport, disposition]
+conversion:
+  decision_type: score
+  scale_id: emergency_severity_index
+  score_direction: lower_is_more_urgent
+  ordered_values: [1, 2, 3, 4, 5]
+  decision_question: "Which Emergency Severity Index acuity level was assigned at triage?"
+  group_split_field: stay_id
+training_allocation:
+  seed: 42
+  requested_train: 200
+  sampling_policy: minimum_five_per_acuity_then_source_prevalence
+  maximum_records_per_stay: 1
+  clean_case_requirements: [stay_id, chiefcomplaint, heartrate, resprate, o2sat, sbp, dbp, acuity]
+output:
+  directory: datasets/mimic_esi/v1/processed
+  records_format: parquet
+  manifest_file: manifest.json

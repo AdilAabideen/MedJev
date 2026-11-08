@@ -1,0 +1,17 @@
+schema_version: 1
+source:
+  id: nacef_curb65
+  provider: physionet
+  dataset: NACeF
+  revision: 2.0.0
+  url: https://physionet.org/content/nacef/2.0.0/
+  license: physionet-restricted-health-data-license-1.5.0
+  access_requirements: PhysioNet credentialed access
+  use: external_evaluation_only
+  population: emergency department patients with suspected infection
+conversion:
+  decision_type: score
+  scale_id: curb65
+  score_direction: higher_is_worse
+  target: admission_curb
+  caution: Recompute only when the source fields needed for all five CURB-65 criteria are available; otherwise report the provided admission score as a separate-label external benchmark.

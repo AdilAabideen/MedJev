@@ -1,0 +1,46 @@
+# Pinned MedMCQA source and internal pilot allocations.
+schema_version: 1
+source:
+  id: medmcqa
+  provider: huggingface
+  repository: openlifescienceai/medmcqa
+  revision: 91c6572c454088bf71b679ad90aa8dffcd0d5868
+  config: default
+  dataset_card: https://huggingface.co/datasets/openlifescienceai/medmcqa
+  original_repository: https://github.com/medmcqa/medmcqa
+  license: apache-2.0
+  license_reference: https://huggingface.co/datasets/openlifescienceai/medmcqa/blob/91c6572c454088bf71b679ad90aa8dffcd0d5868/README.md
+source_splits:
+  train:
+    expected_rows: 182822
+    use: training_and_validation_pool
+  validation:
+    expected_rows: 4183
+    use: pilot_test
+  test:
+    expected_rows: 6150
+    use: reserve_unscored
+conversion:
+  decision_type: choice
+  source_id_field: id
+  question_field: question
+  option_fields: [opa, opb, opc, opd]
+  option_ids: [option_a, option_b, option_c, option_d]
+  label_field: cop
+  label_encoding: zero_based_option_index
+  metadata_fields: [choice_type, subject_name, topic_name]
+  excluded_input_fields: [exp]
+internal_allocation:
+  from_source_split: train
+  seed: 42
+  stratify_by: []
+  sampling: seeded_uniform_without_replacement
+  counts:
+    train: 5000
+    validation: 2500
+  external_test_count: 2500
+  remaining_rows: unused_source_rows
+output:
+  directory: datasets/medmcqa/v1/processed
+  records_format: parquet
+  manifest_file: manifest.json

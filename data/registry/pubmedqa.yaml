@@ -1,0 +1,54 @@
+# PQA-A supplies the current balanced pilot splits; PQA-L is reserved for later.
+schema_version: 1
+source:
+  id: pubmedqa
+  provider: huggingface
+  repository: qiaojin/PubMedQA
+  revision: e1bd6e261df393cb9338ddd3e6c9f9572bde2215
+  dataset_card: https://huggingface.co/datasets/qiaojin/PubMedQA
+  paper: https://aclanthology.org/D19-1259/
+  original_repository: https://github.com/pubmedqa/pubmedqa
+  license: mit
+  license_reference: https://huggingface.co/datasets/qiaojin/PubMedQA/blob/e1bd6e261df393cb9338ddd3e6c9f9572bde2215/README.md
+  attribution_note: The dataset card lists MIT; retain the PubMedQA citation and respect the underlying article terms.
+source_splits:
+  pqa_artificial:
+    use: train_validation_test
+    expected_rows: 211269
+    label_provenance: automatically_generated_heuristic
+  pqa_labeled:
+    use: reserved_not_used_in_current_pilot
+    expected_rows: 1000
+    label_provenance: expert_labeled
+conversion:
+  decision_type: noul
+  source_id_field: pubid
+  question_field: question
+  context_field: context.contexts
+  label_field: final_decision
+  allowed_labels: ["yes", "no"]
+  excluded_input_fields: [long_answer]
+  state_template: "Research question: {question}\nStudy context: {contexts}"
+  decision_question: "Does the provided study context support the proposition in the research question?"
+  candidates:
+    - {id: "yes", text: "Yes"}
+    - {id: "no", text: "No"}
+training_allocation:
+  source_split: pqa_artificial
+  seed: 42
+  deduplicate_by: pubid
+  split_counts:
+    train: {"yes": 1500, "no": 1500}
+    validation: {"yes": 750, "no": 750}
+    test: {"yes": 750, "no": 750}
+  exclude_maybe: true
+  preserve_label_provenance: true
+  evaluation_label_provenance: automatically_generated_heuristic
+reserved_data:
+  source_split: pqa_labeled
+  use: not_in_current_pilot
+  note: Expert-labelled PQA-L is reserved for a later evaluation design; maybe labels are not converted to binary Noul.
+output:
+  directory: datasets/pubmedqa/v1/processed
+  records_format: parquet
+  manifest_file: manifest.json

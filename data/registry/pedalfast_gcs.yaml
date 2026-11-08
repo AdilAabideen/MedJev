@@ -1,0 +1,16 @@
+schema_version: 1
+source:
+  id: pedalfast_gcs
+  provider: cran_package
+  package: pedalfast.data
+  revision: 1.0.2
+  url: https://cran.r-project.org/package=pedalfast.data
+  license: GPL-2.0
+  use: external_evaluation_only
+  population: pediatric traumatic brain injury
+conversion:
+  decision_type: score
+  scale_id: glasgow_coma_scale
+  score_direction: higher_is_better
+  target: total_gcs_from_eye_verbal_motor
+  caution: Pediatric TBI cohort; report separately and do not treat as general adult medical evaluation.

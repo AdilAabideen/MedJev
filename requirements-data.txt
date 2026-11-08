@@ -1,0 +1,4 @@
+# Reproducible dataset building (Python 3.9+)
+datasets==2.21.0
+pyarrow==19.0.1
+PyYAML==6.0.2

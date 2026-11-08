@@ -1,0 +1,22 @@
+schema_version: 1
+source:
+  id: medjev_pilot
+  provider: deterministic_aggregation
+  revision: medjev-pilot-v1
+  note: Aggregates source-level records after exact count, label-balance, and source-group isolation checks.
+allocation:
+  seed: 42
+  splits:
+    train: {choice: 5000, noul: 3000, score: 2000}
+    validation: {choice: 2500, noul: 1500, score: 1000}
+    test: {choice: 2500, noul: 1500, score: 1000}
+  score_by_dataset:
+    news2: {train: 667, validation: 334, test: 334}
+    gcs: {train: 667, validation: 333, test: 333}
+    curb65: {train: 666, validation: 333, test: 333}
+  excluded_sources:
+    mimic_esi: deferred_until_local_source_is_supplied
+output:
+  directory: datasets/pilot/v1/processed
+  records_format: parquet
+  manifest_file: manifest.json

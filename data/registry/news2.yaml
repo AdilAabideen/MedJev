@@ -1,0 +1,25 @@
+schema_version: 1
+source:
+  id: news2
+  provider: seeded_rule_generator
+  revision: generator-v1
+  rules_reference: https://rcp.ac.uk/resources/national-early-warning-score-news-2/
+  chart_reference: https://rcp.ac.uk/media/alxev00t/news2-chart-1_the-news-scoring-system_0_0.pdf
+  license: derived-rule-examples
+  note: Adult NEWS2, SpO2 Scale 1 only; supplemental oxygen adds 2 points. Generated labels are rule calculations, not clinical judgments.
+conversion:
+  decision_type: score
+  scale_id: news2_scale1
+  score_direction: higher_is_worse
+  ordered_values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+  decision_question: "What is the NEWS2 aggregate score for this adult observation set using SpO2 Scale 1?"
+training_allocation:
+  seed: 42
+  counts:
+    train: 667
+    validation: 334
+    test: 334
+output:
+  directory: datasets/news2/v1/processed
+  records_format: parquet
+  manifest_file: manifest.json
