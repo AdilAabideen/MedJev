@@ -5,7 +5,7 @@ model:
   id: google/medgemma-1.5-4b-it
   revision: 91850547d9f0b2fdd21aa7c5f4f3d1a8a52c243b
   architecture: Gemma 3 multimodal; this pilot uses text inputs only
-  processor: AutoProcessor
+  tokenizer: AutoTokenizer  # R01 text-only preflight
   transformers_loader: AutoModelForMultimodalLM
   checkpoint_dtype: bfloat16
   access_terms: https://developers.google.com/health-ai-developer-foundations/terms

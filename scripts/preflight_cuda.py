@@ -17,6 +17,13 @@ def fail(message: str) -> None:
     raise SystemExit(1)
 
 
+def exception_detail(exc: Exception) -> str:
+    detail = " ".join(str(exc).split())
+    if len(detail) > 240:
+        detail = detail[:237] + "..."
+    return f"{type(exc).__name__}: {detail}" if detail else type(exc).__name__
+
+
 def check_sdpa_masks(torch, device) -> None:
     import torch.nn.functional as F
 
@@ -46,7 +53,7 @@ def main() -> None:
     try:
         import torch
         import transformers
-        from transformers import AutoModelForMultimodalLM, AutoProcessor
+        from transformers import AutoModelForMultimodalLM, AutoTokenizer
     except ImportError as exc:
         fail(f"Training dependencies are missing ({type(exc).__name__}); install requirements-train.txt.")
 
@@ -75,9 +82,16 @@ def main() -> None:
     print("SDPA boolean/additive mask probe: PASS")
 
     try:
-        processor = AutoProcessor.from_pretrained(
+        tokenizer = AutoTokenizer.from_pretrained(
             MODEL_ID, revision=MODEL_REVISION
         )
+    except Exception as exc:
+        message = str(exc).lower()
+        if "gated" in message or "401" in message or "403" in message:
+            fail("MedGemma access denied. Accept its terms and log in to Hugging Face on this Pod.")
+        fail(f"MedGemma tokenizer failed ({exception_detail(exc)}).")
+
+    try:
         model = AutoModelForMultimodalLM.from_pretrained(
             MODEL_ID,
             revision=MODEL_REVISION,
@@ -92,7 +106,7 @@ def main() -> None:
             fail("MedGemma access denied. Accept its terms and log in to Hugging Face on this Pod.")
         if "out of memory" in message or "cuda out of memory" in message:
             fail("MedGemma did not fit in GPU memory. Choose a GPU with more VRAM.")
-        fail(f"MedGemma load failed ({type(exc).__name__}); check Hub access and the pinned environment.")
+        fail(f"MedGemma model load failed ({exception_detail(exc)}).")
 
     parameter = next(model.parameters())
     if parameter.device != device or parameter.dtype != torch.bfloat16:
@@ -106,14 +120,9 @@ def main() -> None:
         fail(f"Expected SDPA; Transformers selected {selected_backend!r}.")
 
     model.eval()
-    messages = [
-        {
-            "role": "user",
-            "content": [{"type": "text", "text": PROMPT}],
-        }
-    ]
+    messages = [{"role": "user", "content": PROMPT}]
     try:
-        inputs = processor.apply_chat_template(
+        inputs = tokenizer.apply_chat_template(
             messages,
             tokenize=True,
             add_generation_prompt=True,
