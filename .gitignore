@@ -16,3 +16,15 @@ __pycache__/
 
 /venv
 /docs
+# Training environments, model weights, and preflight outputs.
+/.venv/
+/.env
+/.env.*
+!/.env.example
+/training_runs/
+/checkpoints/
+/model_cache/
+# Keep the public R01 operator guide versioned while the docs directory remains private.
+!/docs/
+/docs/*
+!/docs/R01_CUDA_PREFLIGHT.md

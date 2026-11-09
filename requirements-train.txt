@@ -1,0 +1,11 @@
+# R01 candidate lock for Python 3.11 on Linux x86_64 with one NVIDIA CUDA GPU.
+# Install the matching CUDA wheel for torch first; see docs/R01_CUDA_PREFLIGHT.md.
+# These exact pins are an initial reproducible candidate and still require the
+# documented first RunPod preflight before they can be called GPU-validated.
+torch==2.15.0
+transformers==5.22.2
+accelerate==1.15.0
+huggingface-hub==1.33.0
+peft==0.21.2
+tokenizers==0.23.3
+safetensors==0.8.0

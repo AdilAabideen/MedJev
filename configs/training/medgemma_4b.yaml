@@ -1,0 +1,13 @@
+# Human-readable model reference. The R01 preflight does not read this file.
+# If the checkpoint changes, update the constants in scripts/preflight_cuda.py too.
+model:
+  name: MedGemma 1.5 4B instruction-tuned
+  id: google/medgemma-1.5-4b-it
+  revision: 91850547d9f0b2fdd21aa7c5f4f3d1a8a52c243b
+  architecture: Gemma 3 multimodal; this pilot uses text inputs only
+  processor: AutoProcessor
+  transformers_loader: AutoModelForMultimodalLM
+  checkpoint_dtype: bfloat16
+  access_terms: https://developers.google.com/health-ai-developer-foundations/terms
+  model_card: https://huggingface.co/google/medgemma-1.5-4b-it
+  notes: Keep the upstream checkpoint intact; no vision-layer removal in R01.
